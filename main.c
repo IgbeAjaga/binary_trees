@@ -54,7 +54,16 @@ int main(void)
     int array[] = {79, 47, 68, 87, 84, 91, 21, 32, 34, 2, 20, 22, 98, 1, 62, 95};
     size_t n = sizeof(array) / sizeof(array[0]);
 
-    avl_tree = array_to_avl(array, n);
+    print_array(array, n);
+
+    /* Sorted Array to AVL Tree */
+    avl_tree = sorted_array_to_avl(array, n);
+    if (!avl_tree)
+    {
+        printf("Error: Failed to create AVL tree\n");
+        return (EXIT_FAILURE);
+    }
+
     binary_tree_print(avl_tree);
     binary_tree_delete(avl_tree);
 
