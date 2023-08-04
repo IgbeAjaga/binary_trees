@@ -27,7 +27,7 @@ size_t binary_tree_height(const binary_tree_t *tree)
 }
 
 /**
- * binary_tree_depth - Function that calculates the depth of a node from the root.
+ * binary_tree_depth - Calculates the depth of a node from the root.
  * @tree: The node to calculate the depth for.
  *
  * Return: The depth of the node (number of edges from the root).
@@ -38,7 +38,7 @@ size_t binary_tree_depth(const binary_tree_t *tree)
 }
 
 /**
- * create_linked_node - Creates a linked node containing the node and its depth.
+ * create_linked_node - Linked node containing the node and its depth.
  * @head: Pointer to the head of the linked list.
  * @tree: The node to store in the linked list.
  * @depth: The depth of the node in the tree.
