@@ -3,22 +3,24 @@
 #include "binary_trees.h"
 
 /**
- * heapify_down - Move the value down the binary heap to maintain max heap.
- *
- * @node: Pointer to the node to start the heapify down process.
+ * heapify_down - Moves the value down the binary tree to heapify it
+ * @root: Double pointer to the root node of the heap
  */
-void heapify_down(heap_t *node)
+void heapify_down(heap_t *root)
 {
-    heap_t *largest, *tmp;
+    heap_t *largest, *node;
+    int tmp;
 
+    if (root == NULL)
+        return;
+
+    node = root;
     while (1)
     {
         largest = node;
-
-        if (node->left && node->left->n > largest->n)
+        if (node->left != NULL && node->left->n > largest->n)
             largest = node->left;
-
-        if (node->right && node->right->n > largest->n)
+        if (node->right != NULL && node->right->n > largest->n)
             largest = node->right;
 
         if (largest == node)
