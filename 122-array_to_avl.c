@@ -2,11 +2,9 @@
 
 /**
  * array_to_avl - Build an AVL tree from an array
- *
  * @array: Pointer to the first element of the array to be converted
- * @size: Number of elements in the array
- *
- * Return: Pointer to the root node of the created AVL tree, or NULL on failure
+ * @size: Size of the array
+ * Return: AVL tree from the array
  */
 avl_t *array_to_avl(int *array, size_t size)
 {
@@ -35,4 +33,3 @@ avl_t *array_to_avl(int *array, size_t size)
 	}
 	return (root);
 }
-
