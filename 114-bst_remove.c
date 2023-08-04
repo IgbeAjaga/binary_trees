@@ -1,32 +1,26 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include "binary_trees.h"
-
-int main(void)
+/**
+ * bst_remove - remove node from BST tree
+ * @root: root of the tree
+ * @value: node with this value to remove
+ * Return: the tree changed
+ */
+bst_t *bst_remove(bst_t *root, int value)
 {
-    bst_t *tree;
-    int array[] = {
-        79, 47, 68, 87, 84, 91, 21, 32, 34, 2,
-        20, 22, 98, 1, 62, 95
-    };
-    size_t n = sizeof(array) / sizeof(array[0]);
+	int type = 0;
 
-    tree = array_to_bst(array, n);
-    if (!tree)
-        return (1);
-    binary_tree_print(tree);
-
-    tree = bst_remove(tree, 79);
-    printf("Removed 79...\n");
-    binary_tree_print(tree);
-
-    tree = bst_remove(tree, 21);
-    printf("Removed 21...\n");
-    binary_tree_print(tree);
-
-    tree = bst_remove(tree, 68);
-    printf("Removed 68...\n");
-    binary_tree_print(tree);
-    binary_tree_delete(tree);
-    return (0);
+	if (root == NULL)
+		return (NULL);
+	if (value < root->n)
+		root->left = bst_remove(root->left, value);
+	else if (value > root->n)
+		root->right = bst_remove(root->right, value);
+	else if (value == root->n)
+	{
+		type = remove_type(root);
+		if (type != 0)
+			root->right = bst_remove(root->right, type);
+	}
+	else
+		return (NULL);
+	return (root);
 }
