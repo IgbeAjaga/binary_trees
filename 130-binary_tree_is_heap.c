@@ -1,58 +1,137 @@
-#include <stddef.h>
 #include "binary_trees.h"
 
 /**
- * is_complete - Checks if a binary tree is complete.
- *
- * @tree: Pointer to the root node of the binary tree.
- * @index: Current index of the node in the binary tree.
- * @node_count: Total number of nodes in the binary tree.
- *
- * Return: 1 if the tree is complete, otherwise 0.
+ * binary_tree_height - Measures the height of a binary tree
+ * @tree: Tree to go through
+ * Return: The height
  */
-int is_complete(const binary_tree_t *tree, size_t index, size_t node_count)
+size_t binary_tree_height(const binary_tree_t *tree)
 {
-    if (tree == NULL)
-        return (1);
+	size_t left_height = 0;
+	size_t right_height = 0;
 
-    if (index >= node_count)
-        return (0);
-
-    return (is_complete(tree->left, 2 * index + 1, node_count) &&
-            is_complete(tree->right, 2 * index + 2, node_count));
+	if (tree == NULL)
+	{
+		return (0);
+	}
+	else
+	{
+		if (tree->left == NULL && tree->right == NULL)
+			return (tree->parent != NULL);
+		if (tree)
+		{
+			left_height = tree->left ? 1 + binary_tree_height(tree->left) : 0;
+			right_height = tree->right ? 1 + binary_tree_height(tree->right) : 0;
+		}
+		return ((left_height > right_height) ? left_height : right_height);
+	}
 }
 
 /**
- * is_heap - Checks if a binary tree is a max binary heap.
- *
- * @tree: Pointer to the root node of the binary tree.
- *
- * Return: 1 if the tree is a max binary heap, otherwise 0.
+ * binary_tree_balance - Measures the balance factor of a binary tree
+ * @tree: Tree to go through
+ * Return: Balanced factor
  */
-int is_heap(const binary_tree_t *tree)
+int binary_tree_balance(const binary_tree_t *tree)
 {
-    if (tree == NULL)
-        return (1);
+	int right_height = 0, left_height = 0, balance_factor = 0;
 
-    if (tree->left && tree->n < tree->left->n)
-        return (0);
-
-    if (tree->right && tree->n < tree->right->n)
-        return (0);
-
-    return (is_heap(tree->left) && is_heap(tree->right));
+	if (tree)
+	{
+		left_height = ((int)binary_tree_height(tree->left));
+		right_height = ((int)binary_tree_height(tree->right));
+		balance_factor = left_height - right_height;
+	}
+	return (balance_factor);
 }
 
 /**
- * binary_tree_is_heap - Checks if a binary tree is a valid Max Binary Heap.
- *
- * @tree: Pointer to the root node of the binary tree.
- *
- * Return: 1 if the tree is a valid Max Binary Heap, otherwise 0.
+ * check_is_perfect - Function that checks if a tree is perfect or not
+ * @tree: Tree to check
+ * Return: 0 if it is not perfect, or the level of height otherwise
+ */
+int check_is_perfect(const binary_tree_t *tree)
+{
+	int left_height = 0, right_height = 0;
+
+	if (tree->left && tree->right)
+	{
+		left_height = 1 + check_is_perfect(tree->left);
+		right_height = 1 + check_is_perfect(tree->right);
+		if (right_height == left_height && right_height != 0 && left_height != 0)
+			return (right_height);
+		return (0);
+	}
+	else if (!tree->left && !tree->right)
+	{
+		return (1);
+	}
+	else
+	{
+		return (0);
+	}
+}
+
+/**
+ * binary_tree_is_perfect - Checks if a tree is perfect
+ * @tree: Tree to check
+ * Return: 1 if it is perfect, or 0 if not
+ */
+int binary_tree_is_perfect(const binary_tree_t *tree)
+{
+	int result = 0;
+
+	if (tree == NULL)
+	{
+		return (0);
+	}
+	else
+	{
+		result = check_is_perfect(tree);
+		if (result != 0)
+		{
+			return (1);
+		}
+		return (0);
+	}
+}
+
+/**
+ * binary_tree_is_heap - Checks if a binary tree is a valid Max Binary Heap
+ * @tree: Tree to check
+ * Return: 1 if it is a Max Binary Heap, or 0 if not
  */
 int binary_tree_is_heap(const binary_tree_t *tree)
 {
-    size_t node_count = binary_tree_size(tree);
+	int balance_val;
 
-    return (is_complete(tree, 0, node_count) && is_heap(tree));
+	if (tree == NULL)
+	{
+		return (0);
+	}
+	if (tree->left && tree->left->n > tree->n)
+	{
+		return (0);
+	}
+	if (tree->right && tree->right->n > tree->n)
+	{
+		return (0);
+	}
+	if (binary_tree_is_perfect(tree))
+	{
+		return (1);
+	}
+	balance_val = binary_tree_balance(tree);
+	if (balance_val == 0)
+	{
+		return (binary_tree_is_perfect(tree->left) && binary_tree_is_heap(tree->right));
+	}
+	if (balance_val == 1)
+	{
+		return (binary_tree_is_heap(tree->left) && binary_tree_is_perfect(tree->right));
+	}
+	else
+	{
+		return (0);
+	}
 }
