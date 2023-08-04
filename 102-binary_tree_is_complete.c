@@ -10,6 +10,7 @@
 link_t *create_node(binary_tree_t *node)
 {
 	link_t *new_node = malloc(sizeof(link_t));
+
 	if (new_node == NULL)
 		return (NULL);
 	new_node->node = node;
@@ -24,6 +25,7 @@ link_t *create_node(binary_tree_t *node)
 void free_queue(link_t *head)
 {
 	link_t *temp_node;
+
 	while (head)
 	{
 		temp_node = head->next;
@@ -41,6 +43,7 @@ void free_queue(link_t *head)
 void push(binary_tree_t *node, link_t *head, link_t **tail)
 {
 	link_t *new_node = create_node(node);
+
 	if (new_node == NULL)
 	{
 		free_queue(head);
@@ -57,6 +60,7 @@ void push(binary_tree_t *node, link_t *head, link_t **tail)
 void pop(link_t **head)
 {
 	link_t *temp_node = (*head)->next;
+
 	free(*head);
 	*head = temp_node;
 }
