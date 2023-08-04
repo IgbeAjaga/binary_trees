@@ -1,39 +1,100 @@
-#include <stdbool.h>
 #include "binary_trees.h"
 
 /**
- * is_bst_util - Recursive function to check if a binary tree is a valid BST
+ * check_sub_tree_Left - Check if all nodes in the left subtree
+ * are smaller than the specified root value.
+ * @node: Node in the tree to verify the condition.
+ * @max: Value to compare.
  *
- * @tree: Pointer to the root node of the tree
- * @prev: Pointer to the previously visited node
- *
- * Return: 1 if tree is a valid BST, otherwise 0
+ * Return: 1 if all nodes are smaller or equal, 0 if not.
  */
-int is_bst_util(const binary_tree_t *tree, const binary_tree_t **prev)
+int check_sub_tree_Left(const binary_tree_t *node, int max)
 {
-    if (tree == NULL)
-        return (1);
+	int left = 0, right = 0;
 
-    if (!is_bst_util(tree->left, prev))
-        return (0);
-
-    if (*prev != NULL && tree->n <= (*prev)->n)
-        return (0);
-
-    *prev = tree;
-
-    return is_bst_util(tree->right, prev);
+	if (node == NULL)
+	{
+		return (1);
+	}
+	else
+	{
+		if (node->n >= max)
+			return (0);
+		left = check_sub_tree_Left(node->left, max);
+		right = check_sub_tree_Left(node->right, max);
+		if (left == right && left == 1)
+			return (1);
+		return (0);
+	}
 }
 
 /**
- * binary_tree_is_bst - Checks if a binary tree is a valid Binary Search Tree
+ * check_sub_tree_Right - Check if all nodes in the right
+ * subtree are bigger than the specified root value.
+ * @node: Node in the tree to verify the condition.
+ * @min: Value to compare.
  *
- * @tree: Pointer to the root node of the tree to check
+ * Return: 1 if all nodes are bigger or equal, 0 if not.
+ */
+int check_sub_tree_Right(const binary_tree_t *node, int min)
+{
+	int left = 0, right = 0;
+
+	if (node == NULL)
+	{
+		return (1);
+	}
+	else
+	{
+		if (node->n <= min)
+			return (0);
+		left = check_sub_tree_Right(node->left, min);
+		right = check_sub_tree_Right(node->right, min);
+		if (left == right && left == 1)
+			return (1);
+		return (0);
+	}
+}
+
+/**
+ * binary_tree_is_bst - Check if a tree is a Binary Search Tree (BST).
+ * The process here is to first verify that the left node is smaller than
+ * the root, then verify if the right node is bigger than the root.
+ * After that, verify if the left subtree has nodes smaller than the root,
+ * and the right subtree has bigger nodes than the root.
  *
- * Return: 1 if tree is a valid BST, otherwise 0
+ * @tree: Node that points to the tree to check.
+ *
+ * Return: 1 if it is a BST, 0 if not.
  */
 int binary_tree_is_bst(const binary_tree_t *tree)
 {
-    const binary_tree_t *prev = NULL;
-    return (is_bst_util(tree, &prev));
+	int var = 0, left = 2, right = 2;
+
+	if (tree == NULL)
+		return (0);
+	if (tree->left && tree->left->n > tree->n)
+		return (0);
+	if (tree->right && tree->right->n < tree->n)
+		return (0);
+	if (tree->left && tree->left->n < tree->n)
+	{
+		var = check_sub_tree_Left(tree->left, tree->n);
+		if (var == 0)
+			return (0);
+		left = binary_tree_is_bst(tree->left);
+	}
+	if (tree->right && tree->right->n > tree->n)
+	{
+		var = check_sub_tree_Right(tree->right, tree->n);
+		if (var == 0)
+			return (0);
+		right = binary_tree_is_bst(tree->right);
+	}
+	if (left != 2 || right != 2)
+	{
+		if (left == 0 || right == 0)
+			return (0);
+	}
+	return (1);
 }
