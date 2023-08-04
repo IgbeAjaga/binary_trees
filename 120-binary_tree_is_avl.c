@@ -1,43 +1,67 @@
 #include "binary_trees.h"
 
 /**
- * binary_tree_height - Measure the height of a binary tree
- *
+ * binary_tree_height - Measures the height of a binary tree
  * @tree: Pointer to the root node of the tree
- *
- * Return: Height of the tree, or 0 if @tree is NULL
+ * Return: Height of the tree, or 0 if tree is NULL
  */
 size_t binary_tree_height(const binary_tree_t *tree)
 {
-    size_t left_height, right_height;
+	size_t l = 0;
+	size_t r = 0;
 
-    if (tree == NULL)
-        return (0);
-
-    left_height = binary_tree_height(tree->left);
-    right_height = binary_tree_height(tree->right);
-
-    return (1 + (left_height > right_height ? left_height : right_height));
+	if (tree == NULL)
+	{
+		return (0);
+	}
+	else
+	{
+		l = tree->left ? 1 + binary_tree_height(tree->left) : 0;
+		r = tree->right ? 1 + binary_tree_height(tree->right) : 0;
+		return ((l > r) ? l : r);
+	}
 }
 
 /**
- * binary_tree_is_avl - Check if a binary tree is a valid AVL Tree
- *
+ * bal_avl - Auxiliar function to compare each subtree if it's AVL.
+ * @tree: node that points to the tree to check.
+ * @lower: value of the lower bound.
+ * @high: value of the higher bound.
+ * Return: 1 if tree is AVL, 0 if not.
+ */
+int bal_avl(const binary_tree_t *tree, int lower, int high)
+{
+	size_t height_l, height_r, balancer;
+
+	if (tree != NULL)
+	{
+		if (tree->n > high || tree->n < lower)
+		{
+			return (0);
+		}
+		height_l = binary_tree_height(tree->left);
+		height_r = binary_tree_height(tree->right);
+		balancer = height_l > height_r ? height_l - height_r : height_r - height_l;
+		if (balancer > 1)
+		{
+			return (0);
+		}
+		return (bal_avl(tree->left, lower, tree->n - 1) &&
+			bal_avl(tree->right, tree->n + 1, high));
+	}
+	return (1);
+}
+
+/**
+ * binary_tree_is_avl - Checks if a binary tree is a valid.
  * @tree: Pointer to the root node of the tree to check
- *
  * Return: 1 if @tree is a valid AVL Tree, 0 otherwise
  */
 int binary_tree_is_avl(const binary_tree_t *tree)
 {
-    int balance_factor;
-
-    if (tree == NULL)
-        return (0);
-
-    balance_factor = binary_tree_height(tree->left) - binary_tree_height(tree->right);
-
-    if (balance_factor > 1 || balance_factor < -1)
-        return (0);
-
-    return (binary_tree_is_avl(tree->left) && binary_tree_is_avl(tree->right));
+	if (tree == NULL)
+	{
+		return (0);
+	}
+	return (bal_avl(tree, INT_MIN, INT_MAX));
 }
